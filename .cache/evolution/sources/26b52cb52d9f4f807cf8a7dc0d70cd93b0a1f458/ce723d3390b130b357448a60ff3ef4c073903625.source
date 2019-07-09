@@ -1,0 +1,45 @@
+[Data Source]
+DisplayName=Праздники РФ
+Enabled=true
+Parent=26b52cb52d9f4f807cf8a7dc0d70cd93b0a1f458
+
+[Authentication]
+Host=apidata.googleusercontent.com
+Method=OAuth2
+Port=443
+ProxyUid=system-proxy
+RememberPassword=true
+User=terar476@gmail.com
+CredentialName=
+
+[Security]
+Method=tls
+
+[Resource]
+Identity=events::https://apidata.googleusercontent.com/caldav/v2/e9qissjledpmiobe4dk6ur39chgnig37e9nnas1eeon66obccln68obi5pjmurr7dhiisorfdk%40virtual/events/
+
+[WebDAV Backend]
+AvoidIfmatch=false
+CalendarAutoSchedule=true
+Color=#16a765
+DisplayName=Праздники РФ
+EmailAddress=
+ResourcePath=/caldav/v2/e9qissjledpmiobe4dk6ur39chgnig37e9nnas1eeon66obccln68obi5pjmurr7dhiisorfdk%40virtual/events/
+ResourceQuery=
+SslTrust=
+
+[Calendar]
+BackendName=caldav
+Color=#16a765
+Selected=true
+
+[Alarms]
+IncludeMe=true
+LastNotified=2019-07-06T12:31:45.478315Z
+
+[Offline]
+StaySynchronized=true
+
+[Refresh]
+Enabled=true
+IntervalMinutes=30

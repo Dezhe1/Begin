@@ -1,0 +1,1096 @@
+/**
+ * Common styles for ubuntu-portal themes
+ *
+ * @author Simple Machines
+ * @author Vadim Nevorotin <malamut@ubuntu.ru>
+ */
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+html, body {
+	height: 100%;
+}
+
+body {
+	background-attachment: scroll;
+	background-color: transparent;
+	background-image: url("img/bg_dotted.png");
+	background-position: 0px 0px;
+	background-repeat: repeat;
+	color: #333;
+	font-family: "Ubuntu Beta", "UbuntuBeta", "Ubuntu", "Bitstream Vera Sans", "DejaVu Sans", "Tahoma", sans-serif;
+	font-size: 12px;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: normal;
+	line-height: 16px;
+}
+
+img {
+	border: 0;
+}
+
+a, a:link, a:visited {
+	text-decoration: none;
+	color: #dd4814;
+}
+
+a:hover, a:active {
+	text-decoration: underline;
+}
+
+.clearer {
+	clear: both;
+	height: 0px;
+}
+
+.rounded {
+	border-radius: 4px;
+}
+
+.bottom-rounded {
+	border-radius: 0px 0px 4px 4px;
+}
+
+.top-rounded {
+	border-radius: 4px 4px 0px 0px;
+}
+
+
+/* Шрифты */
+
+h1, h2, h3, h4, h5, h6 { 
+	font-weight: 400;
+}
+
+h1 {
+	font-size: 36px;
+	line-height: 40px;
+	display: block;
+}
+
+h2 {
+	font-size: 24px;
+	line-height: 28px;
+	display: block;
+}
+
+.small-text {
+	font-size: 10px;
+	line-height: 14px;
+}
+
+/* *** */
+
+div#__container {
+	width: 100%;
+	position: relative;
+	min-height: 100%;
+}
+
+div#__container > div:first-child {
+	margin: 0px auto;
+	min-width: 1100px;
+	/*width: 1000px;*/
+	max-width: 1400px;
+	position: relative;
+	min-height: 100%;
+}
+
+#__page {
+	background-color: #f7f7f7;
+	margin: 0px 25px 9px 25px;
+	border-radius: 0px 0px 4px 4px;
+}
+
+body.with-bottom-panel #__page {
+	margin-bottom: 49px;
+}
+
+body#__detail #__page {
+	margin-bottom: 25px;
+}
+
+#__wrapper {
+	background-color: #fff;
+	border-radius: 0px 0px 4px 4px;
+	border: solid #ddd;
+	border-width: 2px 1px;
+	border-top: none;
+}
+
+div#__container > div:first-child > div.no {
+	width: 100%;
+	height: 16px;
+	display: block;
+}
+
+/**************/
+/*** HEADER ***/
+
+#__header {
+	height: 106px;
+	position: relative;
+}
+
+/* Header menu */
+#__header-menu {
+	height: 64px;
+	padding: 0px 16px;
+	background: #dd4814 url("img/header_b.png") repeat-x;
+    border-radius: 0px 0px 4px 4px;
+}
+
+#__header-menu a {
+	text-decoration: none;
+}
+
+#__header-menu li {
+	float: left;
+	display: block;
+}
+
+#__header-menu > ul {
+	display: block;
+	list-style-type: none;
+	float: left;
+	font-size: 14px;
+	background: transparent url("img/menu_divider.png") repeat-y;
+}
+
+#__header-menu > ul a {
+	display: block;
+	text-align: center;
+	padding: 24px 9px 0px 8px;
+	height: 40px;
+	color: #fff;
+	text-shadow: 0px 1px #000;
+	background: transparent url("img/menu_divider.png") 100% 0% repeat-y;
+}
+
+#__header-menu > ul a:hover,
+#__header-menu > ul a:active,
+#__header-menu > ul a.active
+{
+	background: transparent url("img/menu_active.png") repeat;
+}
+
+/* Header submenu */
+#__header-menu .header-submenu {
+	position: absolute;
+	z-index: 9;
+	width: 100%;
+	margin-right: -258px;
+	top: 64px;
+	left: 16px;
+}
+
+#__header-menu .header-submenu > div {
+	margin-right: 259px;
+	background-color: #f7f7f7;
+	border: #f3f3f3 solid 1px;
+	border-bottom-color: #ececec;
+	border-top: none;
+	border-radius: 0px 0px 4px 4px;
+}
+
+#__header-menu .header-submenu ul {
+	display: block;
+	list-style-type: none;
+	float: left;
+	font-size: 12px;
+	background: url("img/subnav_active_bg.png") repeat;
+	border-bottom-left-radius: 4px;
+}
+
+#__header-menu .header-submenu a {
+	padding-top: 13px;
+	height: 27px;
+	color: #333;
+	text-shadow: none;
+	background: #f7f7f7 url("img/third_nav_divider.png") no-repeat 100% 1px;
+}
+
+#__header-menu .header-submenu a:hover,
+#__header-menu .header-submenu a:active,
+#__header-menu .header-submenu a.active
+{
+	background: transparent;
+	color: #dd4814;
+}
+
+#__header-menu .header-submenu li:first-child a {
+	border-bottom-left-radius: 4px;
+}
+
+/* Controls in header */
+
+#__header-controls {
+	float: right;
+}
+
+/* User info in submenu */
+#__header-menu #__header-user {
+	height: 39px;
+	padding: 1px 8px 0 0;
+	float: left;
+	font-size: 12px;
+	line-height: 39px;
+	color: #aea79f;
+}
+
+#__header-menu #__header-user > a {
+	padding: 0;
+	display: inline-block;
+	height: 39px;
+	color: inherit;
+	background: none;
+}
+
+#__header-menu #__header-user > a.userlink {
+	padding-left: 18px;
+}
+
+#__header-menu #__header-user a.userlink.male {
+	background: url("img/userlink/user-male.png") no-repeat 0% 50% !important;
+}
+
+#__header-menu #__header-user a.userlink.female {
+	background: url("img/userlink/user-female.png") no-repeat 0% 50% !important;
+}
+
+#__header-menu #__header-user a.userlink.unknown {
+	background: url("img/userlink/user-unknown.png") no-repeat 0% 50% !important;
+}
+
+#__header-menu #__header-user a.logout:hover,
+#__header-menu #__header-user a.login:hover {
+	color: #dd4814;
+}
+
+#__header-menu #__header-user a.userlink span.userlink-popup {
+	left: auto;
+	right: -8px;
+	top: 30px;
+	box-shadow: none;
+}
+
+/* Toolbox */
+#__header-menu #__header-toolbox {
+	height: 32px;
+	padding-top: 8px;
+	float: left;
+	font-size: 12px;
+	line-height: 24px;
+	background: #f7f7f7 url("img/third_nav_divider.png") no-repeat 0 1px;
+	border-bottom-right-radius: 4px;
+	position: relative;
+}
+
+#__header-menu #__header-toolbox > img {
+	margin: 0 8px 0 9px;
+}
+
+#__header-menu #__header-toolbox div.header-popup {
+	left: auto;
+	right: -1px;
+}
+
+/* Submenus and other list popups */
+#__header-menu div.header-popup {
+	z-index: 90;
+	display: none;
+	position: absolute;
+	top: 40px;
+	left: 0px;
+	padding-top: 3px;
+	width: auto;
+	white-space: nowrap;
+}
+
+#__header-menu *:hover > div.header-popup {
+	display: block;
+}
+
+#__header-menu div.header-popup ul {
+	display: block;
+	float: none;
+	font-weight: normal;
+	line-height: 16px;
+	border: 1px solid #cccccc;
+	border-radius: 4px;
+}
+
+#__header-menu div.header-popup li {
+	float: none;
+}
+#__header-menu div.header-popup li.divider {
+	height: 1px;
+	padding: 2px 4px;
+	background: #f7f7f7;
+}
+
+#__header-menu div.header-popup li.divider hr {
+	border: none;
+	border-top: 1px solid #ccc;
+	height: 0;
+}
+
+#__header-menu div.header-popup li a
+{
+	display: block;
+	height: auto;
+	padding: 6px 8px;
+	z-index: 190;
+	text-align: left;
+}
+
+#__header-menu div.header-popup li > a:first-child
+{
+	border-top-right-radius: 4px;
+	border-top-left-radius: 4px;
+}
+
+#__header-menu div.header-popup li:last-child a
+{
+	border-bottom-right-radius: 4px;
+	border-bottom-left-radius: 4px;
+}
+
+/* SMF specific */
+
+#__header-menu #menu_nav li
+{
+	float: left;
+	position: relative;
+}
+
+#__header-menu #menu_nav li > div {
+	z-index: 90;
+	display: none;
+	position: absolute;
+	width: 220px;
+	padding-top: 3px;
+}
+
+#__header-menu #menu_nav li ul
+{
+	font-weight: normal;
+	border: 1px solid #cccccc;
+	border-radius: 0px 4px 4px 4px;
+}
+
+#__header-menu #menu_nav li li a
+{
+	display: block;
+	width: 220px;
+	height: 20px;
+	padding: 4px 0px 0px 0px;
+	z-index: 190;
+}
+
+#__header-menu #menu_nav li li > a:first-child
+{
+	border-top-right-radius: 4px;
+}
+
+#__header-menu #menu_nav li li a.last
+{
+	border-bottom-right-radius: 4px;
+	border-bottom-left-radius: 4px;
+}
+
+#__header-menu #menu_nav li ul ul
+{
+	margin: -1.8em 0 0 13em;
+}
+
+/* the hover effects on level2 and 3 */
+#__header-menu #menu_nav li li a:hover,
+#__header-menu #menu_nav li li:hover>a
+{
+	background: transparent;
+	color: #dd4814;
+	text-decoration: none;
+}
+
+#__header-menu #menu_nav li:hover ul ul,
+#__header-menu #menu_nav li:hover ul ul ul
+{
+	top: -999em;
+}
+
+#__header-menu #menu_nav li li:hover ul
+{
+	top: auto;
+}
+
+#__header-menu #menu_nav li:hover > div
+{
+	display: block;
+}
+
+#__header-menu #menu_nav li li.additional_items
+{
+	background-color: #fff;
+}
+
+/* Header logo */
+
+#__header-logo {
+	float: right;
+}
+
+#__header-logo a {
+	display: block;
+	margin-top: 16px;
+}
+
+/* Search form */
+
+#__search-box {
+	position: relative;
+	z-index: 20;
+	/*top: -1px;*/
+	float: right;
+	margin-right: 16px;
+	padding: 7px 0 0 8px;
+	height: 33px;
+	width: 214px;
+	background-color: #f7f7f7;
+	border: #f3f3f3 solid 1px;
+	border-bottom-color: #ececec;
+	border-top: none;
+	/*border-top-color: #ccc;
+	border-top-style: solid;
+	border-top-width: 1px;*/
+	border-radius: 0px 0px 4px 4px;
+}
+
+#__search-box input#search__input,
+#__search-box input.edit
+{
+	width: 172px;
+	border: 1px solid #ccc;
+	height: 14px;
+	padding: 6px 0 4px 4px;
+	float: left;
+	margin-right: 7px;
+	font-size: 11px;
+}
+
+#__search-box input#search__submit,
+#__search-box button
+{
+	margin-top: 1px;
+	width: 24px;
+	height: 25px;
+	background: transparent url("img/search_submit_bg_2.png") no-repeat;
+	border: none 0px;
+	cursor: pointer;
+	text-indent: 35px;
+	overflow: hidden;
+	float: left;
+}
+
+#__search-box input#search__submit:hover,
+#__search-box button:hover
+{
+	background-position: 0px -23px;
+}
+
+#__search-box input#search__submit:active,
+#__search-box button:active
+{
+	background-position: 0px -46px;
+}
+
+/* Всплывающая подсказка для формы поиска */
+#__search-box div.ajax_qsearch {
+  position: absolute;
+  left: -1px;
+  top: 43px;
+  min-width: 222px;
+  display: none;
+  font-size: 12px;
+  line-height: 16px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  text-align: left;
+  border-radius: 4px;
+}
+
+#__search-box div.ajax_qsearch strong {
+	display: block;
+	padding: 6px 10px;
+	font-weight: normal;
+	background-image: url("img/subnav_active_bg.png");
+	border-radius: 4px 4px 0px 0px;
+}
+
+#__search-box div.ajax_qsearch ul {
+	margin: 6px 8px;
+	list-style: none;
+	line-height: 18px;
+}
+#__search-box div.ajax_qsearch li { 
+	padding-left: 8px;
+	background: url(img/tocdot2.gif) 0px 9px no-repeat;
+}
+
+/*****************/
+/*** MAIN AREA ***/
+
+#__main {
+	position: relative;
+	padding: 0 16px 16px 16px;
+	color: #222;
+}
+
+#__main-title h1 {
+	margin: 30px 0px 32px 8px;
+	float: left;
+	clear: left;
+}
+
+#__main-title h1 a,
+#__main-title h1 a:hover {
+	color: inherit;
+	text-decoration: none;
+}
+
+#__main-title h2 {
+	margin: 0px 0px 32px 8px;
+	float: left;
+	clear: left;
+}
+
+#__main-title span {
+	color: #aea79f;
+}
+
+/* Upshrink for SMF */
+
+#__main-title #upshrink {
+	float: right;
+	clear: right;
+	padding-top: 44px;
+	padding-right: 7px;
+}
+
+/* Message Area */
+
+div.msgarea {
+	clear: both;
+	margin: 8px 0px;
+}
+
+div.msgarea > div {
+	padding: 4px 8px;
+	padding-left: 32px;
+	background-position: 8px 4px;
+}
+
+/***************/
+/*** CONTENT ***/
+
+.content {
+	clear: both;
+	position: relative;
+	background-color: #f7f7f7;
+	padding: 1px 0px;
+	margin-bottom: 16px;
+	border-radius: 4px;
+}
+
+.content-main {
+	margin: 15px 16px;
+	border-radius: 4px;
+}
+
+/* smf */
+
+div.smf {
+	clear: both;
+}
+
+/* sidebars */
+
+.content-wrapper {
+	width: 100%;
+	margin-right: -236px;
+	float: left;
+}
+
+.content-wrapper .content {
+	margin-right: 236px;
+}
+
+.sidebar {
+	float: right;
+	width: 222px;
+	font-size: 14px;
+	line-height: 18px;
+	background: #f7f7f7;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	box-shadow: 0px 0px 4px #bbb;
+}
+
+.sidebar a {
+	text-decoration: none;
+}
+
+.sidebar a.wikilink2 {
+	color: #aea79f;
+	text-decoration: none;
+}
+
+.sidebar h4 {
+	display: block;
+	padding: 7px 8px;
+	border-radius: 4px 4px 0px 0px;
+	background: #dfdcd9;
+}
+
+.sidebar > div {
+	margin: 8px 12px 8px 0px;
+}
+
+.sidebar ul {
+	list-style: none;
+	margin-left: 10px;
+	line-height: 22px;
+}
+
+.sidebar div.li {
+	background: url("img/hs_arrow.png") no-repeat 0% 50%;
+	/*text-indent: -16px;
+	padding-left: 28px;*/
+	padding-left: 12px;
+}
+
+.sidebar div.li:hover {
+	background: url("img/H3_arrow.png") no-repeat 0% 50%;
+}
+
+/* Кнопочка Править для боковой колонки */
+
+.sidebar div.secedit2 {
+	margin: 0px;
+	position: relative;
+	top: -8px;
+	left: -8px;
+	float: right;
+}
+
+.sidebar div.secedit2 a {
+	color: #ccc;
+}
+
+/* Breadcumbs */
+
+div.breadcrumbs {
+	padding: 13px 8px 0px 8px;
+	height: 27px;
+	position: relative;
+	float: right;
+	color: #aea79f;
+}
+
+div.breadcrumbs a:hover {
+	text-decoration: underline;
+	color: #dd4814;
+}
+
+/**************/
+/*** FOOTER ***/
+
+#__site-footer {
+	position: relative;
+	padding: 16px 0 16px 16px;
+	font-size: 10px;
+	line-height: 16px;
+	border-radius: 0px 0px 4px 4px;
+}
+
+#__site-footer > ul {
+	display: block;
+	float: left;
+	list-style-type: none;
+	width: 16.6666666%;
+	margin-bottom: 24px;
+}
+
+#__site-footer > ul li {
+	display: block;
+	margin-right: 16px;
+	border-bottom-color: #333333;
+	border-bottom-style: dotted;
+	border-bottom-width: 1px;
+}
+
+#__site-footer > ul li:first-child {
+	font-weight: bold;
+}
+
+#__site-footer > ul a {
+	color: #333;
+}
+
+#__site-footer > ul a:hover {
+	color: #dd4814;
+	text-decoration: underline;
+}
+
+#__site-footer > ul a:active,
+#__site-footer > ul a.active
+{
+	color: #dd4814;
+}
+
+#__site-footer > ul a.rss-feed {
+	padding-right: 18px;
+	background: url("img/news_feed_bg.png") 100% 0 no-repeat;
+}
+
+#__site-footer > p {
+	clear: both;
+	float: left;
+	color: #aea79f;
+	padding-top: 3px;
+	line-height: 12px;
+	position: relative;
+	top: 2px;
+}
+
+#__site-footer > a {
+	display: block;
+	float: right;
+	position: relative;
+	padding-right: 16px;
+	height: 27px;
+}
+
+/* ************ */
+/* Content menu */
+
+#__control,
+#__control.pinned-down {
+	position: absolute;
+	width: 100%;
+	bottom: 0px;
+	left: 0px;
+	background: #f7f7f7;
+	border-top: solid 1px #ccc;
+	height: 40px;
+	z-index: 100000;
+}
+
+#__control.pinned-up {
+	position: fixed;
+}
+
+#__control ul {
+	display: block;
+	list-style-type: none;
+	background: #f7f7f7 url("img/subnav_active_bg.png") repeat;
+	float: right;
+}
+
+#__control ul:first-child {
+	float: left;
+}
+
+#__control li {
+	float: right;
+}
+
+#__control ul:first-child li {
+	float: left;
+}
+
+#__control ul a {
+	display: block;
+	height: 27px;
+	text-align: center;
+	padding: 13px 8px 0px 8px;
+	color: #333;
+	text-decoration: none;
+	background: #f7f7f7 url("img/third_nav_divider_r.png") no-repeat 0px 1px;
+}
+
+#__control ul:first-child a {
+	background: #f7f7f7 url("img/third_nav_divider.png") no-repeat 100% 1px;
+}
+
+#__control ul a:hover,
+#__control ul a:active,
+#__control ul a.active
+{
+	color: #dd4814;
+	background: transparent;
+}
+
+/* #########################################################################
+ * Дополнительные элементы
+*/
+
+div.sidebar-button {
+	float: right;
+	position: relative;
+	clear: right;
+	padding-top: 16px;
+}
+
+#__main-title div.sidebar-button {
+	padding-top: 29px;
+}
+
+a.ubuntu-button-224,
+a.ubuntu-button-400 {
+	display: block;
+	height: 40px;
+	color: #fff;
+	font-size: 20px;
+	font-weight: normal;
+	text-align: center;
+	line-height: 40px;
+	text-decoration: none;
+}
+
+a.ubuntu-button-224 {
+	width: 224px;
+	background: url("img/btn-manual-download.png") no-repeat;
+}
+
+a.ubuntu-button-224:hover {
+	background: url("img/btn-manual-download-hover.png") no-repeat;
+}
+
+a.ubuntu-button-400 {
+	width: 400px;
+	background: url("img/btn-400.png") repeat-x;
+}
+
+a.ubuntu-button-400:hover {
+	background: url("img/btn-400-hover.png") repeat-x;
+}
+
+div.besthosting {
+	float: left;
+	height: 26px;
+	margin: 0 32px;
+	margin-top: 1px;
+	text-align: center;
+	line-height: 10px;
+	position: relative;
+	top: 2px;
+}
+
+div.besthosting a {
+	color: #aea79f;
+}
+
+div.besthosting a:hover {
+	color: #dd4814;
+	text-decoration: none;
+}
+
+/* ######################################################################################## 
+ * Стили для дополнительных модификаций, указываемых через класс body
+*/
+
+/* dark и grey
+   страница на баклажанном или сером фоне вместо светлого */
+
+body.dark #__wrapper {
+	background-color: #2c001e;
+}
+
+body.grey #__wrapper {
+	background-color: #dfdcd9;
+}
+
+body.dark .content,
+body.grey .content {
+	background-color: #f7f7f7;
+}
+
+body.dark .content-main,
+body.grey .content-main {
+	margin-bottom: 31px;
+}
+
+body.dark #__main-title h1 {
+	color: #fff;
+}
+
+body.dark #__main-title h2 {
+	color: #aea79f;
+}
+
+body.dark .content-wrapper .content,
+body.grey .content-wrapper .content {
+	margin-right: 227px;
+}
+
+body.dark .sidebar,
+body.grey .sidebar {
+	box-shadow: none;
+}
+
+body.dark #__header-menu,
+body.grey #__header-menu {
+	border-bottom-color: #2f1326;
+}
+
+body.dark #__header-menu .header-submenu > div,
+body.grey #__header-menu .header-submenu > div {
+	border-bottom-color: #ccc;
+}
+
+body.dark #__header-menu .header-submenu a:hover,
+body.dark #__header-menu .header-submenu a:active,
+body.dark #__header-menu .header-submenu a.active,
+body.grey #__header-menu .header-submenu a:hover,
+body.grey #__header-menu .header-submenu a:active,
+body.grey #__header-menu .header-submenu a.active
+{
+	background: transparent;
+	color: #dd4814;
+}
+
+body.dark #__search-box,
+body.grey #__search-box {
+	border-bottom-color: #ccc;
+}
+
+/* Стили для alarm */
+body > a#alarm,
+body > a#alarm:hover,
+body > a#alarm:active {
+        font-family: "Verdana", sans-serif;
+        background-color: #111;
+        padding: 10px 30px 5px 30px;
+        color: #E8EBF3;
+        font-size: 14px;
+        line-height: 1.3em;
+        text-align: center;
+        display: block;
+        text-decoration: none;
+}
+
+body > a#alarm p.alarm-big {
+        font-size: 20px;
+        color: #E8EBF3;
+        margin: 10px 0;
+}
+
+/* Dokuwiki переопределение картинок для загрузки из из того же места, что и css */
+div.dokuwiki li.open {
+  list-style-image: url(doku-theme/open.png);
+}
+div.dokuwiki li.closed {
+  list-style-image: url(doku-theme/closed.png);
+}
+div.dokuwiki a.urlextern {
+  background-image: url(doku-theme/external.png);
+}
+div.dokuwiki a.windows {
+  background-image: url(doku-theme/windows.gif);
+}
+div.dokuwiki a.mail {
+  background-image: url(doku-theme/email.png);
+}
+
+div.dokuwiki textarea.edit,
+div.dokuwiki input.edit,
+div.dokuwiki select.edit {
+  background-image: url(doku-theme/inputshadow.png);
+}
+
+div.dokuwiki button,
+.qq-upload-button {
+  background-image: url(doku-theme/buttonshadow.png);
+}
+
+div.dokuwiki #dw__toc,
+#media__manager h1 {
+  background-image: url(img/subnav_active_bg.png);
+}
+div.dokuwiki #dw__toc ul li {
+  background-image: url(doku-theme/tocdot2.gif);
+}
+
+div.dokuwiki p.img_caption + p a {
+  background-image: url(img/H3_arrow.png);
+}
+
+#link__wiz_result div.type_u {
+    background-image: url(doku-images/up.png);
+}
+#link__wiz_result div.type_f {
+    background-image: url(doku-images/page.png);
+}
+#link__wiz_result div.type_d {
+    background-image: url(doku-images/ns.png);
+}
+
+.dokuwiki ul.admin_tasks li.admin_acl {
+  background-image: url(doku-images/admin/acl.png);
+}
+.dokuwiki ul.admin_tasks li.admin_usermanager {
+  background-image: url(doku-images/admin/usermanager.png);
+}
+.dokuwiki ul.admin_tasks li.admin_plugin {
+  background-image: url(doku-images/admin/plugin.png);
+}
+.dokuwiki ul.admin_tasks li.admin_config {
+  background-image: url(doku-images/admin/config.png);
+}
+.dokuwiki ul.admin_tasks li.admin_revert {
+  background-image: url(doku-images/admin/revert.png);
+}
+.dokuwiki ul.admin_tasks li.admin_popularity {
+  background-image: url(doku-images/admin/popularity.png);
+}
+
+.qq-upload-spinner {
+  background-image: url(doku-images/throbber.gif);
+}
+
+#mediamanager__page .ui-resizable-e {
+  background-image: url(doku-theme/resizecol.png);
+}
+#mediamanager__page .panelHeader ul li.listType {
+  background-image: url(doku-images/icon-list.png);
+}
+#mediamanager__page .panelHeader ul li.sortBy {
+  background-image: url(doku-images/icon-sort.png);
+}
+2��^d�      	] m�] m�@�B]$s�   3    :https://s.ubuntu.ru/portal/ubuntu-portal.css?alarm necko:classified 1 strongly-framed 1 security-info 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 request-method GET response-head HTTP/2.0 200 OK
+server: nginx/1.16.0
+date: Tue, 02 Jul 2019 11:00:22 GMT
+content-type: text/css
+content-length: 19048
+last-modified: Wed, 04 Oct 2017 11:33:32 GMT
+etag: "59d4c70c-4a68"
+expires: Tue, 09 Jul 2019 11:00:22 GMT
+cache-control: max-age=604800
+accept-ranges: bytes
+X-Firefox-Spdy: h2
+ original-response-headers server: nginx/1.16.0
+date: Tue, 02 Jul 2019 11:00:22 GMT
+content-type: text/css
+content-length: 19048
+last-modified: Wed, 04 Oct 2017 11:33:32 GMT
+etag: "59d4c70c-4a68"
+expires: Tue, 09 Jul 2019 11:00:22 GMT
+cache-control: max-age=604800
+accept-ranges: bytes
+X-Firefox-Spdy: h2
+ uncompressed-len 0 net-response-time-onstart 320 net-response-time-onstop 323   Jh

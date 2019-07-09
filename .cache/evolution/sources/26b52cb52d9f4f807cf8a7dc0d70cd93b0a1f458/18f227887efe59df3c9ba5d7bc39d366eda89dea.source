@@ -1,0 +1,16 @@
+[Data Source]
+DisplayName=Контакты
+Enabled=true
+Parent=26b52cb52d9f4f807cf8a7dc0d70cd93b0a1f458
+
+[Authentication]
+Host=www.google.com
+Method=OAuth2
+Port=0
+ProxyUid=system-proxy
+RememberPassword=true
+User=terar476@gmail.com
+CredentialName=
+
+[Address Book]
+BackendName=google

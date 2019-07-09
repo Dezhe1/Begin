@@ -1,0 +1,561 @@
+var cur_topic_id, cur_msg_id, buff_subject, cur_subject_div, in_edit_mode = 0;
+var hide_prefixes = Array();
+
+function modify_topic(topic_id, first_msg_id)
+{
+	if (!('XMLHttpRequest' in window))
+		return;
+
+	if ('opera' in window)
+	{
+		var oTest = new XMLHttpRequest();
+		if (!('setRequestHeader' in oTest))
+			return;
+	}
+
+	// Add backwards compatibility with old themes.
+	if (typeof(cur_session_var) == 'undefined')
+		cur_session_var = 'sesc';
+
+	if (in_edit_mode == 1)
+	{
+		if (cur_topic_id == topic_id)
+			return;
+		else
+			modify_topic_cancel();
+	}
+
+	in_edit_mode = 1;
+	mouse_on_div = 1;
+	cur_topic_id = topic_id;
+
+	if (typeof window.ajax_indicator == "function")
+		ajax_indicator(true);
+	getXMLDocument(smf_prepareScriptUrl(smf_scripturl) + "action=quotefast;quote=" + first_msg_id + ";modify;xml", onDocReceived_modify_topic);
+}
+
+function onDocReceived_modify_topic(XMLDoc)
+{
+	cur_msg_id = XMLDoc.getElementsByTagName("message")[0].getAttribute("id");
+
+	cur_subject_div = document.getElementById('msg_' + cur_msg_id.substr(4));
+	buff_subject = getInnerHTML(cur_subject_div);
+
+	// Here we hide any other things they want hiding on edit.
+	set_hidden_topic_areas('none');
+
+	modify_topic_show_edit(XMLDoc.getElementsByTagName("subject")[0].childNodes[0].nodeValue);
+	if (typeof window.ajax_indicator == "function")
+		ajax_indicator(false);
+}
+
+function modify_topic_cancel()
+{
+	setInnerHTML(cur_subject_div, buff_subject);
+	set_hidden_topic_areas('');
+
+	in_edit_mode = 0;
+	return false;
+}
+
+function modify_topic_save(cur_session_id, cur_session_var)
+{
+	if (!in_edit_mode)
+		return true;
+
+	// Add backwards compatibility with old themes.
+	if (typeof(cur_session_var) == 'undefined')
+		cur_session_var = 'sesc';
+
+	var i, x = new Array();
+	x[x.length] = 'subject=' + document.forms.quickModForm['subject'].value.replace(/&#/g, "&#38;#").php_to8bit().php_urlencode();
+	x[x.length] = 'topic=' + parseInt(document.forms.quickModForm.elements['topic'].value);
+	x[x.length] = 'msg=' + parseInt(document.forms.quickModForm.elements['msg'].value);
+
+	if (typeof window.ajax_indicator == "function")
+		ajax_indicator(true);
+	sendXMLDocument(smf_prepareScriptUrl(smf_scripturl) + "action=jsmodify;topic=" + parseInt(document.forms.quickModForm.elements['topic'].value) + ";" + cur_session_var + "=" + cur_session_id + ";xml", x.join("&"), modify_topic_done);
+
+	return false;
+}
+
+function modify_topic_done(XMLDoc)
+{
+	if (!XMLDoc)
+	{
+		modify_topic_cancel();
+		return true;
+	}
+
+	var message = XMLDoc.getElementsByTagName("smf")[0].getElementsByTagName("message")[0];
+	var subject = message.getElementsByTagName("subject")[0];
+	var error = message.getElementsByTagName("error")[0];
+
+	if (typeof window.ajax_indicator == "function")
+		ajax_indicator(false);
+
+	if (!subject || error)
+		return false;
+
+	subjectText = subject.childNodes[0].nodeValue;
+
+	modify_topic_hide_edit(subjectText);
+
+	set_hidden_topic_areas('');
+
+	in_edit_mode = 0;
+
+	return false;
+}
+
+// Simply restore any hidden bits during topic editing.
+function set_hidden_topic_areas(set_style)
+{
+	for (var i = 0; i < hide_prefixes.length; i++)
+	{
+		if (document.getElementById(hide_prefixes[i] + cur_msg_id.substr(4)) != null)
+			document.getElementById(hide_prefixes[i] + cur_msg_id.substr(4)).style.display = set_style;
+	}
+}
+
+// *** QuickReply object.
+function QuickReply(oOptions)
+{
+	this.opt = oOptions;
+	this.bCollapsed = this.opt.bDefaultCollapsed;
+}
+
+// When a user presses quote, put it in the quick reply box (if expanded).
+QuickReply.prototype.quote = function (iMessageId, xDeprecated)
+{
+	// Compatibility with older templates.
+	if (typeof(xDeprecated) != 'undefined')
+		return true;
+
+	// Нестандартное поведение: если Quick Reply свёрнут, то разворачиваем
+	if (this.bCollapsed)
+	{
+		this.swap();
+	}
+	if (!this.bCollapsed)	{
+		// Doing it the XMLhttp way? /Modified by Extended Quick Reply mod/
+		if (window.XMLHttpRequest)
+		{
+			ajax_indicator(true);
+			getXMLDocument(smf_prepareScriptUrl(this.opt.sScriptUrl) + 'action=quotefast;quote=' + iMessageId + ';xml;pb=message;mode=' + (oEditorHandle_message.bRichTextEnabled ? 1 : 0), this.onQuoteReceived);
+		}
+		// Or with a smart popup!
+		else
+			reqWin(smf_prepareScriptUrl(this.opt.sScriptUrl) + 'action=quotefast;quote=' + iMessageId, 240, 90);
+
+		// Move the view to the quick reply box.
+		if (navigator.appName == 'Microsoft Internet Explorer')
+			window.location.hash = this.opt.sJumpAnchor;
+		else
+			window.location.hash = '#' + this.opt.sJumpAnchor;
+
+		return false;
+	}
+}
+
+// This is the callback function used after the XMLhttp request. /Modified by Extended Quick Reply mod/
+QuickReply.prototype.onQuoteReceived = function (oXMLDoc)
+{
+	var text = '';
+	for (var i = 0, n = oXMLDoc.getElementsByTagName('quote')[0].childNodes.length; i < n; i++)
+		text += oXMLDoc.getElementsByTagName('quote')[0].childNodes[i].nodeValue;
+	oEditorHandle_message.insertText(text, false, true);
+
+	ajax_indicator(false);
+}
+
+// The function handling the swapping of the quick reply.
+QuickReply.prototype.swap = function ()
+{
+	document.getElementById(this.opt.sImageId).src = this.opt.sImagesUrl + "/" + (this.bCollapsed ? this.opt.sImageCollapsed : this.opt.sImageExpanded);
+	document.getElementById(this.opt.sContainerId).style.display = this.bCollapsed ? '' : 'none';
+
+	this.bCollapsed = !this.bCollapsed;
+}
+
+// *** QuickModify object.
+function QuickModify(oOptions)
+{
+	this.opt = oOptions;
+	this.bInEditMode = false;
+	this.sCurMessageId = '';
+	this.oCurMessageDiv = null;
+	this.oCurSubjectDiv = null;
+	this.sMessageBuffer = '';
+	this.sSubjectBuffer = '';
+	this.bXmlHttpCapable = this.isXmlHttpCapable();
+
+	// Show the edit buttons
+	if (this.bXmlHttpCapable)
+	{
+		for (var i = document.images.length - 1; i >= 0; i--)
+			if (document.images[i].id.substr(0, 14) == 'modify_button_')
+				document.images[i].style.display = '';
+	}
+}
+
+// Determine whether the quick modify can actually be used.
+QuickModify.prototype.isXmlHttpCapable = function ()
+{
+	if (typeof(window.XMLHttpRequest) == 'undefined')
+		return false;
+
+	// Opera didn't always support POST requests. So test it first.
+	if ('opera' in window)
+	{
+		var oTest = new XMLHttpRequest();
+		if (!('setRequestHeader' in oTest))
+			return false;
+	}
+
+	return true;
+}
+
+// Function called when a user presses the edit button.
+QuickModify.prototype.modifyMsg = function (iMessageId)
+{
+	if (!this.bXmlHttpCapable)
+		return;
+
+	// Add backwards compatibility with old themes.
+	if (typeof(sSessionVar) == 'undefined')
+		sSessionVar = 'sesc';
+
+	// First cancel if there's another message still being edited.
+	if (this.bInEditMode)
+		this.modifyCancel();
+
+	// At least NOW we're in edit mode
+	this.bInEditMode = true;
+
+	// Send out the XMLhttp request to get more info
+	ajax_indicator(true);
+
+	// For IE 5.0 support, 'call' is not yet used.
+	this.tmpMethod = getXMLDocument;
+	this.tmpMethod(smf_prepareScriptUrl(this.opt.sScriptUrl) + 'action=quotefast;quote=' + iMessageId + ';modify;xml', this.onMessageReceived);
+	delete this.tmpMethod;
+}
+
+// The callback function used for the XMLhttp request retrieving the message.
+QuickModify.prototype.onMessageReceived = function (XMLDoc)
+{
+	var sBodyText = '', sSubjectText = '';
+
+	// No longer show the 'loading...' sign.
+	ajax_indicator(false);
+
+	// Grab the message ID.
+	this.sCurMessageId = XMLDoc.getElementsByTagName('message')[0].getAttribute('id');
+
+	// If this is not valid then simply give up.
+	if (!document.getElementById(this.sCurMessageId))
+		return this.modifyCancel();
+
+	// Replace the body part.
+	for (var i = 0; i < XMLDoc.getElementsByTagName("message")[0].childNodes.length; i++)
+		sBodyText += XMLDoc.getElementsByTagName("message")[0].childNodes[i].nodeValue;
+	this.oCurMessageDiv = document.getElementById(this.sCurMessageId);
+	this.sMessageBuffer = getInnerHTML(this.oCurMessageDiv);
+
+	// We have to force the body to lose its dollar signs thanks to IE.
+	sBodyText = sBodyText.replace(/\$/g, '{&dollarfix;$}');
+
+	// Actually create the content, with a bodge for disappearing dollar signs.
+	setInnerHTML(this.oCurMessageDiv, this.opt.sTemplateBodyEdit.replace(/%msg_id%/g, this.sCurMessageId.substr(4)).replace(/%body%/, sBodyText).replace(/\{&dollarfix;\$\}/g, '$'));
+
+	// Replace the subject part.
+	this.oCurSubjectDiv = document.getElementById('subject_' + this.sCurMessageId.substr(4));
+	this.sSubjectBuffer = getInnerHTML(this.oCurSubjectDiv);
+
+	sSubjectText = XMLDoc.getElementsByTagName('subject')[0].childNodes[0].nodeValue.replace(/\$/g, '{&dollarfix;$}');
+	setInnerHTML(this.oCurSubjectDiv, this.opt.sTemplateSubjectEdit.replace(/%subject%/, sSubjectText).replace(/\{&dollarfix;\$\}/g, '$'));
+
+	return true;
+}
+
+// Function in case the user presses cancel (or other circumstances cause it).
+QuickModify.prototype.modifyCancel = function ()
+{
+	// Roll back the HTML to its original state.
+	if (this.oCurMessageDiv)
+	{
+		setInnerHTML(this.oCurMessageDiv, this.sMessageBuffer);
+		setInnerHTML(this.oCurSubjectDiv, this.sSubjectBuffer);
+	}
+
+	// No longer in edit mode, that's right.
+	this.bInEditMode = false;
+
+	return false;
+}
+
+// The function called after a user wants to save his precious message.
+QuickModify.prototype.modifySave = function (sSessionId, sSessionVar)
+{
+	// We cannot save if we weren't in edit mode.
+	if (!this.bInEditMode)
+		return true;
+
+	// Add backwards compatibility with old themes.
+	if (typeof(sSessionVar) == 'undefined')
+		sSessionVar = 'sesc';
+
+	var i, x = new Array();
+	x[x.length] = 'subject=' + escape(document.forms.quickModForm['subject'].value.replace(/&#/g, "&#38;#").php_to8bit()).replace(/\+/g, "%2B");
+	x[x.length] = 'message=' + escape(document.forms.quickModForm['message'].value.replace(/&#/g, "&#38;#").php_to8bit()).replace(/\+/g, "%2B");
+	x[x.length] = 'topic=' + parseInt(document.forms.quickModForm.elements['topic'].value);
+	x[x.length] = 'msg=' + parseInt(document.forms.quickModForm.elements['msg'].value);
+
+	// Send in the XMLhttp request and let's hope for the best.
+	ajax_indicator(true);
+	sendXMLDocument.call(this, smf_prepareScriptUrl(this.opt.sScriptUrl) + "action=jsmodify;topic=" + this.opt.iTopicId + ";" + sSessionVar + "=" + sSessionId + ";xml", x.join("&"), this.onModifyDone);
+
+	return false;
+}
+
+// Callback function of the XMLhttp request sending the modified message.
+QuickModify.prototype.onModifyDone = function (XMLDoc)
+{
+	// We've finished the loading stuff.
+	ajax_indicator(false);
+
+	// If we didn't get a valid document, just cancel.
+	if (!XMLDoc || !XMLDoc.getElementsByTagName('smf')[0])
+	{
+		// Mozilla will nicely tell us what's wrong.
+		if (XMLDoc.childNodes.length > 0 && XMLDoc.firstChild.nodeName == 'parsererror')
+			setInnerHTML(document.getElementById('error_box'), XMLDoc.firstChild.textContent);
+		else
+			this.modifyCancel();
+		return;
+	}
+
+	var message = XMLDoc.getElementsByTagName('smf')[0].getElementsByTagName('message')[0];
+	var body = message.getElementsByTagName('body')[0];
+	var error = message.getElementsByTagName('error')[0];
+
+	if (body)
+	{
+		// Show new body.
+		var bodyText = '';
+		for (var i = 0; i < body.childNodes.length; i++)
+			bodyText += body.childNodes[i].nodeValue;
+
+		this.sMessageBuffer = this.opt.sTemplateBodyNormal.replace(/%body%/, bodyText.replace(/\$/g, '{&dollarfix;$}')).replace(/\{&dollarfix;\$\}/g,'$');
+		setInnerHTML(this.oCurMessageDiv, this.sMessageBuffer);
+
+		// Show new subject.
+		var oSubject = message.getElementsByTagName('subject')[0];
+		var sSubjectText = oSubject.childNodes[0].nodeValue.replace(/\$/g, '{&dollarfix;$}');
+		this.sSubjectBuffer = this.opt.sTemplateSubjectNormal.replace(/%msg_id%/g, this.sCurMessageId.substr(4)).replace(/%subject%/, sSubjectText).replace(/\{&dollarfix;\$\}/g,'$');
+		setInnerHTML(this.oCurSubjectDiv, this.sSubjectBuffer);
+
+		// If this is the first message, also update the topic subject.
+		if (oSubject.getAttribute('is_first') == '1')
+			setInnerHTML(document.getElementById('top_subject'), this.opt.sTemplateTopSubject.replace(/%subject%/, sSubjectText).replace(/\{&dollarfix;\$\}/g, '$'));
+
+		// Show this message as 'modified on x by y'.
+		if (this.opt.bShowModify)
+			setInnerHTML(document.getElementById('modified_' + this.sCurMessageId.substr(4)), message.getElementsByTagName('modified')[0].childNodes[0].nodeValue);
+	}
+	else if (error)
+	{
+		setInnerHTML(document.getElementById('error_box'), error.childNodes[0].nodeValue);
+		document.forms.quickModForm.message.style.border = error.getAttribute('in_body') == '1' ? this.opt.sErrorBorderStyle : '';
+		document.forms.quickModForm.subject.style.border = error.getAttribute('in_subject') == '1' ? this.opt.sErrorBorderStyle : '';
+	}
+}
+
+function InTopicModeration(oOptions)
+{
+	this.opt = oOptions;
+	this.bButtonsShown = false;
+	this.iNumSelected = 0;
+
+	// Add backwards compatibility with old themes.
+	if (typeof(this.opt.sSessionVar) == 'undefined')
+		this.opt.sSessionVar = 'sesc';
+
+	this.init();
+}
+
+InTopicModeration.prototype.init = function()
+{
+	// Add checkboxes to all the messages.
+	for (var i = 0, n = this.opt.aMessageIds.length; i < n; i++)
+	{
+		// Create the checkbox.
+		var oCheckbox = document.createElement('input');
+		oCheckbox.type = 'checkbox';
+		oCheckbox.className = 'input_check';
+		oCheckbox.name = 'msgs[]';
+		oCheckbox.value = this.opt.aMessageIds[i];
+		oCheckbox.instanceRef = this;
+		oCheckbox.onclick = function () {
+			this.instanceRef.handleClick(this);
+		}
+
+		// Append it to the container
+		var oCheckboxContainer = document.getElementById(this.opt.sCheckboxContainerMask + this.opt.aMessageIds[i]);
+		oCheckboxContainer.appendChild(oCheckbox);
+		oCheckboxContainer.style.display = '';
+	}
+}
+
+InTopicModeration.prototype.handleClick = function(oCheckbox)
+{
+	if (!this.bButtonsShown && this.opt.sButtonStripDisplay)
+	{
+		var oButtonStrip = document.getElementById(this.opt.sButtonStrip);
+		var oButtonStripDisplay = document.getElementById(this.opt.sButtonStripDisplay);
+
+		// Make sure it can go somewhere.
+		if (typeof(oButtonStripDisplay) == 'object' && oButtonStripDisplay != null)
+			oButtonStripDisplay.style.display = "";
+		else
+		{
+			var oNewDiv = document.createElement('div');
+			var oNewList = document.createElement('ul');
+
+			oNewDiv.id = this.opt.sButtonStripDisplay;
+			oNewDiv.className = this.opt.sButtonStripClass ? this.opt.sButtonStripClass : 'buttonlist floatbottom';
+
+			oNewDiv.appendChild(oNewList);
+			oButtonStrip.appendChild(oNewDiv);
+		}
+
+		// Add the 'remove selected items' button.
+		if (this.opt.bCanRemove)
+			smf_addButton(this.opt.sButtonStrip, this.opt.bUseImageButton, {
+				sId: this.opt.sSelf + '_remove_button',
+				sText: this.opt.sRemoveButtonLabel,
+				sImage: this.opt.sRemoveButtonImage,
+				sUrl: '#',
+				sCustom: ' onclick="return ' + this.opt.sSelf + '.handleSubmit(\'remove\')"'
+			});
+
+		// Add the 'restore selected items' button.
+		if (this.opt.bCanRestore)
+			smf_addButton(this.opt.sButtonStrip, this.opt.bUseImageButton, {
+				sId: this.opt.sSelf + '_restore_button',
+				sText: this.opt.sRestoreButtonLabel,
+				sImage: this.opt.sRestoreButtonImage,
+				sUrl: '#',
+				sCustom: ' onclick="return ' + this.opt.sSelf + '.handleSubmit(\'restore\')"'
+			});
+
+		// Adding these buttons once should be enough.
+		this.bButtonsShown = true;
+	}
+
+	// Keep stats on how many items were selected.
+	this.iNumSelected += oCheckbox.checked ? 1 : -1;
+
+	// Show the number of messages selected in the button.
+	if (this.opt.bCanRemove && !this.opt.bUseImageButton)
+	{
+		setInnerHTML(document.getElementById(this.opt.sSelf + '_remove_button'), this.opt.sRemoveButtonLabel + ' [' + this.iNumSelected + ']');
+		document.getElementById(this.opt.sSelf + '_remove_button').style.display = this.iNumSelected < 1 ? "none" : "";
+	}
+
+	if (this.opt.bCanRestore && !this.opt.bUseImageButton)
+	{
+		setInnerHTML(document.getElementById(this.opt.sSelf + '_restore_button'), this.opt.sRestoreButtonLabel + ' [' + this.iNumSelected + ']');
+		document.getElementById(this.opt.sSelf + '_restore_button').style.display = this.iNumSelected < 1 ? "none" : "";
+	}
+
+	// Try to restore the correct position.
+	var aItems = document.getElementById(this.opt.sButtonStrip).getElementsByTagName('span');
+	if (aItems.length > 3)
+	{
+		if (this.iNumSelected < 1)
+		{
+			aItems[aItems.length - 3].className = aItems[aItems.length - 3].className.replace(/\s*position_holder/, 'last');
+			aItems[aItems.length - 2].className = aItems[aItems.length - 2].className.replace(/\s*position_holder/, 'last');
+		}
+		else
+		{
+			aItems[aItems.length - 2].className = aItems[aItems.length - 2].className.replace(/\s*last/, 'position_holder');
+			aItems[aItems.length - 3].className = aItems[aItems.length - 3].className.replace(/\s*last/, 'position_holder');
+		}
+	}
+}
+
+InTopicModeration.prototype.handleSubmit = function (sSubmitType)
+{
+	var oForm = document.getElementById(this.opt.sFormId);
+
+	// Make sure this form isn't submitted in another way than this function.
+	var oInput = document.createElement('input');
+	oInput.type = 'hidden';
+	oInput.name = this.opt.sSessionVar;
+	oInput.value = this.opt.sSessionId;
+	oForm.appendChild(oInput);
+
+	switch (sSubmitType)
+	{
+		case 'remove':
+			if (!confirm(this.opt.sRemoveButtonConfirm))
+				return false;
+
+			oForm.action = oForm.action.replace(/;restore_selected=1/, '');
+		break;
+
+		case 'restore':
+			if (!confirm(this.opt.sRestoreButtonConfirm))
+				return false;
+
+			oForm.action = oForm.action + ';restore_selected=1';
+		break;
+
+		default:
+			return false;
+		break;
+	}
+
+	oForm.submit();
+	return true;
+}
+
+
+// *** Other functions...
+function expandThumb(thumbID)
+{
+	var img = document.getElementById('thumb_' + thumbID);
+	var link = document.getElementById('link_' + thumbID);
+	var tmp = img.src;
+	img.src = link.href;
+	link.href = tmp;
+	img.style.width = '';
+	img.style.height = '';
+	return false;
+}
+
+// Confirm to edit user post by administration member
+function modify_confirm(event, $message) {
+	if (!confirm($message)) event.preventDefault();
+};
+e��n�      ] l] l@��]$w�   8    :https://forum.ubuntu.ru/Themes/default/scripts/topic.js necko:classified 1 strongly-framed 1 security-info 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 request-method GET response-head HTTP/2.0 200 OK
+server: nginx/1.16.0
+date: Tue, 02 Jul 2019 11:18:17 GMT
+content-type: application/javascript; charset=utf-8
+content-length: 17902
+last-modified: Mon, 20 Jun 2016 15:58:23 GMT
+etag: "5768129f-45ee"
+accept-ranges: bytes
+X-Firefox-Spdy: h2
+ original-response-headers server: nginx/1.16.0
+date: Tue, 02 Jul 2019 11:18:17 GMT
+content-type: application/javascript; charset=utf-8
+content-length: 17902
+last-modified: Mon, 20 Jun 2016 15:58:23 GMT
+etag: "5768129f-45ee"
+accept-ranges: bytes
+X-Firefox-Spdy: h2
+ uncompressed-len 0 net-response-time-onstart 204 net-response-time-onstop 205   E�
